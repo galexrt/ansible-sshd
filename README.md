@@ -1,6 +1,8 @@
 ansible-sshd
 ============
 
+[![Build Status](https://travis-ci.org/galexrt/ansible-sshd.svg?branch=master)](https://travis-ci.org/galexrt/ansible-sshd)
+
 An Ansible role to configure sshd.
 
 Requirements
