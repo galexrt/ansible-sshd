@@ -1,7 +1,7 @@
-Role Name
-=========
+ansible-sshd
+============
 
-A brief description of the role goes here.
+An Ansible role to configure sshd.
 
 Requirements
 ------------
@@ -25,12 +25,12 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: galexrt.sshd }
 
 License
 -------
 
-BSD
+Apache 2.0 License
 
 Author Information
 ------------------
