@@ -1,0 +1,99 @@
+Port {{ sshd_port }}
+AddressFamily any
+ListenAddress {{ ansible_default_ipv4.address }}
+
+PidFile /var/run/sshd.pid
+
+Protocol 2
+
+# HostKey for protocol version 1
+#HostKey /etc/ssh/ssh_host_key
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Ciphers and keying
+#RekeyLimit default none
+
+# Logging
+#SyslogFacility AUTH
+SyslogFacility AUTHPRIV
+LogLevel INFO
+
+LoginGraceTime 30s
+PermitRootLogin no
+StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+
+RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile	/etc/ssh/authorized_keys/%u
+
+RhostsRSAAuthentication no
+HostbasedAuthentication no
+IgnoreUserKnownHosts no
+IgnoreRhosts no
+
+PermitEmptyPasswords no
+PasswordAuthentication no
+
+ChallengeResponseAuthentication no
+KerberosAuthentication no
+GSSAPIAuthentication no
+UsePAM yes
+
+###
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+#PrintMotd yes
+#PrintLastLog yes
+TCPKeepAlive yes
+#UseLogin no
+UsePrivilegeSeparation sandbox # Default for new installations.
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#ShowPatchLevel no
+#UseDNS no
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+Banner none
+
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+
+# override default of no subsystems
+Subsystem sftp {% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}/usr/lib{% else %}/usr/libexec{% endif %}/openssh/sftp-server
+
+{% if sshd_allowed_users is defined %}
+{% for user in sshd_allowed_users %}
+{% if (user.on_hosts is not defined and user.not_on_hosts is not defined) or (user.on_hosts is defined and inventory_hostname in user.on_hosts) or (user.not_on_hosts is defined and inventory_hostname not in user.not_on_hosts) %}
+AllowUsers {{ user.name }}{% if user.host is defined %}@{{ user.host }}{% endif %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if sshd_denied_users is defined %}
+{% for user in sshd_denied_users %}
+{% if (user.on_hosts is not defined and user.not_on_hosts is not defined) or (user.on_hosts is defined and inventory_hostname in user.on_hosts) or (user.not_on_hosts is defined and inventory_hostname not in user.not_on_hosts) %}
+DenyUsers {{ user.name }}{% if user.host is defined %}@{{ user.host }}{% endif %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
