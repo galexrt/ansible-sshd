@@ -21,6 +21,8 @@ install:
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path=../' >ansible.cfg
 
+  - git clone https://github.com/galexrt/ansible-pre-deploy.git /home/travis/build/galexrt/ansible-pre-deploy/tests/roles/galexrt.pre-deploy
+
 script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
