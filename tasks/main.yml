@@ -53,3 +53,7 @@
 - name: Add ssh port to seport if selinux is enabled
   command: "semanage port -a -t ssh_port_t -p tcp {{ sshd_port }}"
   when: selinux_enforce is defined and 'isabled' not in selinux_enforce.stdout
+
+- name: Allow sshd_port on rhel systems
+  command: firewall-cmd --permanent --zone=public --add-port={{ sshd_port }}/tcp
+  when: has_firewalld
