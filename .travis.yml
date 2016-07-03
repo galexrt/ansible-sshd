@@ -25,6 +25,8 @@ install:
 
   - git clone https://github.com/galexrt/ansible-pre-ansible.git /home/travis/build/galexrt/ansible-sshd/tests/roles/galexrt.pre-ansible
 
+  - git clone https://github.com/galexrt/ansible-common-facts.git /home/travis/build/galexrt/ansible-sshd/tests/roles/galexrt.common-facts
+
 script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
