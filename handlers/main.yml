@@ -5,3 +5,6 @@
     name: sshd
     enabled: yes
     state: restarted
+
+- name: reload firewalld
+  command: firewall-cmd --reload

@@ -55,5 +55,6 @@
   when: selinux_enforce is defined and 'isabled' not in selinux_enforce.stdout
 
 - name: Allow sshd_port on rhel systems
-  command: firewall-cmd --permanent --zone=public --add-port={{ sshd_port }}/tcp
+  shell: firewall-cmd --permanent --zone="$(firewall-cmd --get-default-zone)" --add-port={{ sshd_port }}/tcp
   when: has_firewalld
+  notify: reload firewalld
