@@ -52,7 +52,7 @@
   register: firewalld_service
   when: has_firewalld
 
-- name: Allow sshd_port on rhel systems
+- name: Add sshd_port to firewalld
   shell: firewall-cmd --permanent --zone="$(firewall-cmd --get-default-zone)" --add-port={{ sshd_port }}/tcp
   notify: reload firewalld
   register: firewalld_sshd
