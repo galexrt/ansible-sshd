@@ -56,4 +56,4 @@
   shell: firewall-cmd --permanent --zone="$(firewall-cmd --get-default-zone)" --add-port={{ sshd_port }}/tcp
   notify: reload firewalld
   register: firewalld_sshd
-  when: has_firewalld and firewalld_service.state == "running"
+  when: has_firewalld and firewalld_service.status.SubState is defined and firewalld_service.status.SubState == "running"
