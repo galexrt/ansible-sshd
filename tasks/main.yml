@@ -46,14 +46,8 @@
   command: "semanage port -a -t ssh_port_t -p tcp {{ sshd_port }}"
   when: selinux_enforce is defined and 'isabled' not in selinux_enforce.stdout
 
-- name: Check if firewalld service is running
-  service:
-    name: firewalld
-  register: firewalld_service
-  when: has_firewalld
-
 - name: Add sshd_port to firewalld
   shell: firewall-cmd --permanent --zone="$(firewall-cmd --get-default-zone)" --add-port={{ sshd_port }}/tcp
+  ignore_errors: true
   notify: reload firewalld
-  register: firewalld_sshd
-  when: has_firewalld and firewalld_service.status.SubState is defined and firewalld_service.status.SubState == "running"
+  when: has_firewalld
