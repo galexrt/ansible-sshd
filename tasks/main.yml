@@ -29,14 +29,6 @@
   notify:
     - restart sshd
 
-- name: Fix ssh authorized_keys directory
-  file:
-    path: "/etc/ssh/authorized_keys"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
 - name: Check if selinux is used
   command: getenforce
   register: selinux_enforce

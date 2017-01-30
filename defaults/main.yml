@@ -1,3 +1,4 @@
+---
 sshd_port: 22
 sshd_allowed_users: []
 sshd_denied_users: []

@@ -37,4 +37,4 @@ Apache 2.0 License
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+If you have problems with the role, feel free to create an issue on Github or contact me by mail.
