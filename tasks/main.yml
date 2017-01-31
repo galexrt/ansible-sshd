@@ -1,45 +1,20 @@
 ---
-- name: Install sshd config
-  template:
-    src: "sshd_config.j2"
-    dest: "/etc/ssh/sshd_config.tmp"
-    owner: root
-    group: root
-    mode: 0600
+- include: install.yml
+  when: sshd_install
 
-- name: Check if sshd_config is valid
-  command: /usr/sbin/sshd -T -f /etc/ssh/sshd_config.tmp
-  ignore_errors: yes
-  register: sshd_config
-
-- name: Fix sshd_config UsePrivilegeSeparation parameter
+- name: Add/Remove sshd_config options
   lineinfile:
-    dest: "/etc/ssh/sshd_config.tmp"
-    state: present
-    regexp: '.*UsePrivilegeSeparation.*'
-    line: "UsePrivilegeSeparation yes"
+    dest: "{{ sshd_config_file }}"
+    state: "{{ item.state|default('present') }}"
+    regexp: '^[#]?{{ item.key }}.*'
+    line: "{{ item.key }} {{ item.value}}"
     validate: "/usr/sbin/sshd -T -f %s"
-  when: sshd_config.rc != 0
-
-- name: Check if sshd_config is valid
-  command: /usr/sbin/sshd -T -f /etc/ssh/sshd_config.tmp
-
-- name: Copy sshd_config file back
-  shell: cp -f "/etc/ssh/sshd_config.tmp" "/etc/ssh/sshd_config"
+  with_items: "{{ sshd_config }}"
   notify:
-    - restart sshd
+    - reload sshd
+  tags:
+    - configure
 
-- name: Check if selinux is used
-  command: getenforce
-  register: selinux_enforce
-  when: ansible_distribution != "Debian" and ansible_distribution != "Ubuntu"
+- include: selinux.yml
 
-- name: Add ssh port to seport if selinux is enabled
-  command: "semanage port -a -t ssh_port_t -p tcp {{ sshd_port }}"
-  when: selinux_enforce is defined and ('isabled' not in selinux_enforce.stdout and 'ermissive' not in selinux_enforce.stdout)
-
-- name: Add sshd_port to firewalld
-  shell: firewall-cmd --permanent --zone="$(firewall-cmd --get-default-zone)" --add-port={{ sshd_port }}/tcp
-  ignore_errors: true
-  notify: reload firewalld
-  when: has_firewalld
+- include: firewall.yml

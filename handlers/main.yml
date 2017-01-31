@@ -1,9 +1,13 @@
 ---
 # Handler to handle sshd notifications
-- name: restart sshd
+- name: enable sshd
   service:
     name: sshd
     enabled: yes
+
+- name: reload sshd
+  service:
+    name: sshd
     state: restarted
 
 - name: reload firewalld

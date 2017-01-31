@@ -1,4 +1,9 @@
 ---
-sshd_port: 22
-sshd_allowed_users: []
-sshd_denied_users: []
+# location of sshd_config
+sshd_config_file: "/etc/ssh/sshd_config"
+
+# if openssh-server should be installed
+sshd_install: true
+
+# key value config pair
+sshd_config: []

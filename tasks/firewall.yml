@@ -1,0 +1,6 @@
+---
+- name: Add sshd_port to firewalld
+  shell: firewall-cmd --permanent --zone="$(firewall-cmd --get-default-zone)" --add-port={{ sshd_port }}/tcp
+  ignore_errors: true
+  notify: reload firewalld
+  when: has_firewalld

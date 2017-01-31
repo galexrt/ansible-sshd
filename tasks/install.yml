@@ -1,0 +1,9 @@
+---
+- name: Install openssh-server package
+  action: "{{ ansible_pkg_mgr }}"
+  args:
+    name: openssh-server
+    state: latest
+  notify:
+    - enable sshd
+  tags: install
