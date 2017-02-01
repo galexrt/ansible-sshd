@@ -7,7 +7,7 @@
     dest: "{{ sshd_config_file }}"
     state: "{{ item.state|default('present') }}"
     regexp: '^[#]?{{ item.key }}.*'
-    line: "{{ item.key }} {{ item.value}}"
+    line: "{{ item.key }} {{ item.value }}"
     validate: "/usr/sbin/sshd -T -f %s"
   with_items: "{{ sshd_config }}"
   notify:
