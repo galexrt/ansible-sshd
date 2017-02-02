@@ -5,7 +5,7 @@ sshd_config_file: "/etc/ssh/sshd_config"
 # if openssh-server should be installed
 sshd_install: true
 
-sshd_listen_address: ""
+sshd_listen_address: []
 sshd_listen_address_interface: "eth0"
 
 sshd_subsystem_sftp: ""
