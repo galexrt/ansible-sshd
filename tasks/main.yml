@@ -2,14 +2,33 @@
 - include: install.yml
   when: sshd_install
 
-- name: Add/Remove sshd_config options
-  lineinfile:
+ - name: Set the listen address to given interface address
+  set_fact:
+    - sshd_listen_address: "{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv4']['address'] }}"
+  when: sshd_config_default.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
+
+- name: Set the listen address to default address
+  set_fact:
+    - sshd_listen_address: "{{ ansible_default_ipv4.address }}"
+  when: sshd_config_default.ListenAddress == ""
+
+- name: Merge user config with default config
+  set_fact:
+    - sshd_config: "{{ sshd_config + sshd_config_default }}"
+  when: sshd_use_default
+
+- name: Set the listen address to Ansible default address
+  set_fact:
+    - sshd_listen_address:
+
+- name: Set/Update sshd_config
+  template:
+    src: "sshd_config.j2"
     dest: "{{ sshd_config_file }}"
-    state: "{{ item.state|default('present') }}"
-    regexp: '^{{ item.key }}.*'
-    line: "{{ item.key }} {{ item.value }}"
+    owner: root
+    group: root
+    mode: 0644
     validate: "/usr/sbin/sshd -T -f %s"
-  with_items: "{{ sshd_config }}"
   notify:
     - reload sshd
   tags:
