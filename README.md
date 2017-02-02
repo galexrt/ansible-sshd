@@ -5,6 +5,8 @@ ansible-sshd
 
 An Ansible role to configure sshd.
 
+Inspired by https://github.com/willshersystems/ansible-sshd.
+
 Requirements
 ------------
 
