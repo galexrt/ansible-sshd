@@ -35,18 +35,18 @@
     - configure
 
 - name: Set the listen v6 address to given interface address
-set_fact:
-  - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv6']['address'] }}']"
-when: sshd_config_default.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
-tags:
-  - configure
+  set_fact:
+    - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv6']['address'] }}']"
+  when: sshd_config_default.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
+  tags:
+    - configure
 
 - name: Set the listen v6 address to default address
-set_fact:
-  - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ ansible_default_ipv6.address }}']"
-when: sshd_config_default.ListenAddress == ""
-tags:
-  - configure
+  set_fact:
+    - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ ansible_default_ipv6.address }}']"
+  when: sshd_config_default.ListenAddress == ""
+  tags:
+    - configure
 
 - name: Merge user config with default config
   set_fact:
