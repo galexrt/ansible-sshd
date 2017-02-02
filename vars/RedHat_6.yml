@@ -1,0 +1,7 @@
+---
+sshd_subsystem_sftp: /usr/libexec/openssh/sftp-server
+
+sshd_config_default_dist:
+  GSSAPICleanupCredentials: yes
+  Subsystem:
+    - "sftp {{ sshd_sftp_server }}"

@@ -1,0 +1,9 @@
+---
+sshd_config_group: "wheel"
+sshd_config_mode: "0644"
+
+sshd_subsystem_sftp: /usr/libexec/sftp-server
+
+sshd_config_default_dist:
+  Subsystem:
+    - "sftp {{ sshd_sftp_server }}"

@@ -1,0 +1,16 @@
+---
+sshd_config_mode: '0644'
+
+sshd_packages:
+  - openssh
+  - openssh-server
+
+sshd_sftp_server: /usr/libexec/openssh/sftp-server
+
+sshd_config_default_dist:
+  SyslogFacility: AUTHPRIV
+  PermitRootLogin: forced-commands-only
+  X11Forwarding: yes
+  PrintLastLog: yes
+  Subsystem:
+    - "sftp {{ sshd_sftp_server }}"

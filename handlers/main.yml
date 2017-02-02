@@ -2,12 +2,12 @@
 # Handler to handle sshd notifications
 - name: enable sshd
   service:
-    name: sshd
+    name: "{{ sshd_service }}"
     enabled: yes
 
 - name: reload sshd
   service:
-    name: sshd
+    name: "{{ sshd_service }}"
     state: restarted
 
 - name: reload firewalld

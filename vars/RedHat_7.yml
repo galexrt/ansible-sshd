@@ -1,0 +1,11 @@
+---
+sshd_subsystem_sftp: /usr/libexec/openssh/sftp-server
+
+sshd_config_default_dist:
+  HostKey:
+    - /etc/ssh/ssh_host_rsa_key
+    - /etc/ssh/ssh_host_ecdsa_key
+    - /etc/ssh/ssh_host_ed25519_key
+  SyslogFacility: AUTHPRIV
+  GSSAPICleanupCredentials: yes
+  

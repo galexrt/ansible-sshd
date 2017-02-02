@@ -1,57 +1,43 @@
 ---
-- name: Find sftp subsystem path by iterating over default paths
-  stat:
-    path: "{{ item }}"
-  register: s
-  when: sshd_subsystem_sftp == ""
-  with_items:
-    - "/usr/libexec/openssh/sftp-server"
-    - "/usr/lib/openssh/sftp-server"
-    - "/usr/lib/ssh/sftp-server"
-
-- name: Set the sshd sftp subsystem path for debian based systems
+- name: Merge user config with default config
   set_fact:
-    - sshd_subsystem_sftp: "{{ item.item }}"
-  when: sshd_subsystem_sftp == "" and item.stat.exists
-  with_items: "{{ s }}"
+    - sshd_config: "{{ sshd_config_default + sshd_config }}"
+  when: sshd_use_default
+  tags:
+    - configure
 
-- name: Fail as we have not found the sftp subsystem path
-  fail:
-    msg: "Couldn't find sshd sftp subsystem path (sftp-server)."
-  when: sshd_subsystem_sftp == ""
+- name: Merge user config with os specific config
+  set_fact:
+    - sshd_config: "{{ sshd_config_default_dist + sshd_config }}"
+  when: sshd_use_default_dist
+  tags:
+    - configure
 
 - name: Set the listen v4 address to given interface address
   set_fact:
     - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv4']['address'] }}']"
-  when: sshd_config_default.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
+  when: sshd_config.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
   tags:
     - configure
 
 - name: Set the listen v4 address to default address
   set_fact:
     - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ ansible_default_ipv4.address }}']"
-  when: sshd_config_default.ListenAddress == ""
+  when: sshd_config.ListenAddress == ""
   tags:
     - configure
 
 - name: Set the listen v6 address to given interface address
   set_fact:
     - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv6']['address'] }}']"
-  when: sshd_config_default.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
+  when: sshd_config.ListenAddress is defined and sshd_config.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
   tags:
     - configure
 
 - name: Set the listen v6 address to default address
   set_fact:
     - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ ansible_default_ipv6.address }}']"
-  when: sshd_config_default.ListenAddress == ""
-  tags:
-    - configure
-
-- name: Merge user config with default config
-  set_fact:
-    - sshd_config: "{{ sshd_config + sshd_config_default }}"
-  when: sshd_use_default
+  when: sshd_config.ListenAddress is defined and sshd_config.ListenAddress == ""
   tags:
     - configure
 
@@ -65,9 +51,9 @@
   template:
     src: "sshd_config.j2"
     dest: "{{ sshd_config_file }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ sshd_config_owner }}"
+    group: "{{ sshd_config_group }}"
+    mode: "{{ sshd_config_mode }}"
     validate: "/usr/sbin/sshd -T -f %s"
   notify:
     - reload sshd

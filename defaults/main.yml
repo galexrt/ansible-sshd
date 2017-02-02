@@ -1,39 +1,53 @@
 ---
 # location of sshd_config
 sshd_config_file: "/etc/ssh/sshd_config"
+sshd_config_group: "root"
+sshd_config_owner: "root"
+sshd_config_mode: "0600"
 
 # if openssh-server should be installed
-sshd_install: true
+sshd_packages_install: true
+sshd_packages:
+  - openssh
+  - openssh-server
+
+sshd_service: sshd
 
 sshd_listen_address: []
 sshd_listen_address_interface: "eth0"
 
-sshd_subsystem_sftp: ""
+sshd_subsystem_sftp: "/usr/lib/openssh/sftp-server"
 
 sshd_use_default: true
+sshd_use_default_dist: true
+sshd_config_default_dist: {}
 sshd_config_default:
   ListenAddress: "{{ sshd_listen_address|default('', true) }}"
-  HostKey:
-    - /etc/ssh/ssh_host_rsa_key
-    - /etc/ssh/ssh_host_ecdsa_key
-    - /etc/ssh/ssh_host_ed25519_key
-  SyslogFacility: AUTHPRIV
+  Protocol: 2
   LogLevel: INFO
+  LoginGraceTime: 120
   PermitRootLogin: without-password
+  PermitEmptyPasswords: no
+  PubkeyAuthentication: yes
   AuthorizedKeysFile: .ssh/authorized_keys
   PasswordAuthentication: no
+  RSAAuthentication: yes
+  HostbasedAuthentication: no
+  RhostsRSAAuthentication: no
   ChallengeResponseAuthentication: no
-  GSSAPIAuthentication: no
+  GSSAPIAuthentication: yes
   GSSAPICleanupCredentials: no
   UsePAM: yes
-  X11Forwarding: no
+  X11Forwarding: yes
+  UsePrivilegeSeparation: sandbox
+  IgnoreRhosts: yes
   AcceptEnv:
     - LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
     - LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
     - LC_IDENTIFICATION LC_ALL LANGUAGE
     - XMODIFIERS
   Subsystem:
-    - "sftp	{{ sshd_subsystem_sftp }}"
+    - "sftp {{ sshd_subsystem_sftp }}"
 
 # key value config pair
 sshd_config: {}

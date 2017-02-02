@@ -1,0 +1,2 @@
+---
+sshd_subsystem_sftp: /usr/libexec/openssh/sftp-server
