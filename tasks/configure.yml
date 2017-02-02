@@ -13,7 +13,7 @@
   set_fact:
     - sshd_subsystem_sftp: "{{ item.item }}"
   when: sshd_subsystem_sftp == "" and item.stat.exists
-  with_items: s
+  with_items: "{{ s }}"
 
 - name: Fail as we have not found the sftp subsystem path
   fail:
