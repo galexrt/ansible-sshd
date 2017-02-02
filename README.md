@@ -20,13 +20,40 @@ sshd_config_file: "/etc/ssh/sshd_config"
 # if openssh-server should be installed
 sshd_install: true
 
-# key value config pair
-sshd_config:
-- key: ListenAddress
-  value: "{{ ansible_default_ipv4.address }}"
-- key: AllowUsers
-  value: "galexrt@*"
-  state: absent # a valid ansible lineinfile module state
+sshd_listen_address: ""
+sshd_listen_address_interface: "eth0"
+
+# will be automatically detected
+sshd_subsystem_sftp: "/usr/libexec/openssh/sftp-server"
+
+sshd_use_default: true
+# this is the default config
+sshd_config_default:
+  ListenAddress: "{{ sshd_listen_address|default('', true) }}"
+  HostKey:
+    - /etc/ssh/ssh_host_rsa_key
+    - /etc/ssh/ssh_host_ecdsa_key
+    - /etc/ssh/ssh_host_ed25519_key
+  SyslogFacility: AUTHPRIV
+  LogLevel: INFO
+  PermitRootLogin: without-password
+  AuthorizedKeysFile: .ssh/authorized_keys
+  PasswordAuthentication: no
+  ChallengeResponseAuthentication: no
+  GSSAPIAuthentication: no
+  GSSAPICleanupCredentials: no
+  UsePAM: yes
+  X11Forwarding: no
+  AcceptEnv:
+    - LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+    - LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+    - LC_IDENTIFICATION LC_ALL LANGUAGE
+    - XMODIFIERS
+  Subsystem:
+    - "sftp	{{ sshd_subsystem_sftp }}"
+
+# this config will be merged with sshd_config_default when sshd_use_default is true
+sshd_config: {}
 ```
 
 Dependencies

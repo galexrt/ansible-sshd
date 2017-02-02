@@ -8,7 +8,7 @@ sshd_install: true
 sshd_listen_address: ""
 sshd_listen_address_interface: "eth0"
 
-sshd_subsystem_sftp: "/usr/libexec/openssh/sftp-server"
+sshd_subsystem_sftp: ""
 
 sshd_use_default: true
 sshd_config_default:
