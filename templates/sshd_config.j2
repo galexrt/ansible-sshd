@@ -14,7 +14,7 @@
 {% endmacro %}
 {{ ansible_managed | comment }}
 {% for key, value in sshd_config.iteritems() %}
-{% if key == "ListenAddress" and value|length == 0 %}
+{% if key == "ListenAddress" and (value == "" or value|length == 0) %}
 {% set value = sshd_listen_addresses %}
 {% endif %}
 {%     if key == "Match" %}

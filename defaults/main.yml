@@ -1,5 +1,5 @@
 ---
-# location of sshd_config
+# location, group, owner and mode of the sshd_config
 sshd_config_file: "/etc/ssh/sshd_config"
 sshd_config_group: "root"
 sshd_config_owner: "root"
@@ -7,6 +7,7 @@ sshd_config_mode: "0600"
 
 # if openssh-server should be installed
 sshd_packages_install: true
+# the packages to install for openssh server
 sshd_packages:
   - openssh
   - openssh-server

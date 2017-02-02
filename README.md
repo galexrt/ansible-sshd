@@ -16,45 +16,60 @@ Role Variables
 --------------
 
 ```
-# location of sshd_config
+# location, group, owner and mode of the sshd_config
 sshd_config_file: "/etc/ssh/sshd_config"
+sshd_config_group: "root"
+sshd_config_owner: "root"
+sshd_config_mode: "0600"
 
 # if openssh-server should be installed
-sshd_install: true
+sshd_packages_install: true
+# the packages to install for openssh server
+sshd_packages:
+  - openssh
+  - openssh-server
 
-sshd_listen_addresses: ""
-sshd_listen_addresses_interface: "eth0"
+sshd_service: sshd
 
-# will be automatically detected
-sshd_subsystem_sftp: "/usr/libexec/openssh/sftp-server"
+sshd_listen_addresses: []
+sshd_listen_addresses_auto_detect: true
+sshd_listen_addresses_default_to_v4: true
+sshd_listen_addresses_default_to_v6: true
+
+sshd_subsystem_sftp: "/usr/lib/openssh/sftp-server"
 
 sshd_use_default: true
-# this is the default config
+sshd_use_default_dist: true
+sshd_config_default_dist: {}
 sshd_config_default:
-  ListenAddress: "{{ sshd_listen_addresses|default('', true) }}"
-  HostKey:
-    - /etc/ssh/ssh_host_rsa_key
-    - /etc/ssh/ssh_host_ecdsa_key
-    - /etc/ssh/ssh_host_ed25519_key
-  SyslogFacility: AUTHPRIV
+  ListenAddress: "{{ sshd_listen_addresses|default([], true) }}"
+  Protocol: 2
   LogLevel: INFO
+  LoginGraceTime: 120
   PermitRootLogin: without-password
+  PermitEmptyPasswords: no
+  PubkeyAuthentication: yes
   AuthorizedKeysFile: .ssh/authorized_keys
   PasswordAuthentication: no
+  RSAAuthentication: yes
+  HostbasedAuthentication: no
+  RhostsRSAAuthentication: no
   ChallengeResponseAuthentication: no
-  GSSAPIAuthentication: no
+  GSSAPIAuthentication: yes
   GSSAPICleanupCredentials: no
   UsePAM: yes
-  X11Forwarding: no
+  X11Forwarding: yes
+  UsePrivilegeSeparation: sandbox
+  IgnoreRhosts: yes
   AcceptEnv:
     - LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
     - LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
     - LC_IDENTIFICATION LC_ALL LANGUAGE
     - XMODIFIERS
   Subsystem:
-    - "sftp	{{ sshd_subsystem_sftp }}"
+    - "sftp {{ sshd_subsystem_sftp }}"
 
-# this config will be merged with sshd_config_default when sshd_use_default is true
+# key value config pairs like above
 sshd_config: {}
 ```
 
