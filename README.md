@@ -22,8 +22,8 @@ sshd_config_file: "/etc/ssh/sshd_config"
 # if openssh-server should be installed
 sshd_install: true
 
-sshd_listen_address: ""
-sshd_listen_address_interface: "eth0"
+sshd_listen_addresses: ""
+sshd_listen_addresses_interface: "eth0"
 
 # will be automatically detected
 sshd_subsystem_sftp: "/usr/libexec/openssh/sftp-server"
@@ -31,7 +31,7 @@ sshd_subsystem_sftp: "/usr/libexec/openssh/sftp-server"
 sshd_use_default: true
 # this is the default config
 sshd_config_default:
-  ListenAddress: "{{ sshd_listen_address|default('', true) }}"
+  ListenAddress: "{{ sshd_listen_addresses|default('', true) }}"
   HostKey:
     - /etc/ssh/ssh_host_rsa_key
     - /etc/ssh/ssh_host_ecdsa_key

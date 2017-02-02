@@ -13,8 +13,10 @@ sshd_packages:
 
 sshd_service: sshd
 
-sshd_listen_address: []
-sshd_listen_address_interface: "eth0"
+sshd_listen_addresses: []
+sshd_listen_addresses_auto_detect: true
+sshd_listen_addresses_default_to_v4: true
+sshd_listen_addresses_default_to_v6: true
 
 sshd_subsystem_sftp: "/usr/lib/openssh/sftp-server"
 
@@ -22,7 +24,7 @@ sshd_use_default: true
 sshd_use_default_dist: true
 sshd_config_default_dist: {}
 sshd_config_default:
-  ListenAddress: "{{ sshd_listen_address|default('', true) }}"
+  ListenAddress: "{{ sshd_listen_addresses|default([], true) }}"
   Protocol: 2
   LogLevel: INFO
   LoginGraceTime: 120

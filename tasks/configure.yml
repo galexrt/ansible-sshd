@@ -1,51 +1,32 @@
 ---
 - name: Merge user config with default config
   set_fact:
-    - sshd_config: "{{ sshd_config_default + sshd_config }}"
+    sshd_config: "{{ sshd_config_default|combine(sshd_config, recursive=True) }}"
   when: sshd_use_default
   tags:
     - configure
 
 - name: Merge user config with os specific config
   set_fact:
-    - sshd_config: "{{ sshd_config_default_dist + sshd_config }}"
+    sshd_config: "{{ sshd_config_default_dist|combine(sshd_config, recursive=True) }}"
   when: sshd_use_default_dist
   tags:
     - configure
 
-- name: Set the listen v4 address to given interface address
+- name: Set the listen v4 and v6 address from default detected addresses
   set_fact:
-    - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv4']['address'] }}']"
-  when: sshd_config.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
+    sshd_listen_addresses: "{{ sshd_listen_addresses }} + ['{{ hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] }}']"
+  when: sshd_config.ListenAddress|length == 0 and sshd_listen_addresses|length == 0 and sshd_listen_addresses_auto_detect and hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] is defined
+  with_items:
+    - { value: "ipv4", when: sshd_listen_addresses_default_to_v4 }
+    - { value: "ipv6", when: sshd_listen_addresses_default_to_v6 }
   tags:
     - configure
 
-- name: Set the listen v4 address to default address
-  set_fact:
-    - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ ansible_default_ipv4.address }}']"
-  when: sshd_config.ListenAddress == ""
-  tags:
-    - configure
-
-- name: Set the listen v6 address to given interface address
-  set_fact:
-    - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface]['ipv6']['address'] }}']"
-  when: sshd_config.ListenAddress is defined and sshd_config.ListenAddress == "" and hostvars[inventory_hostname]['ansible_' + sshd_listen_address_interface] is defined
-  tags:
-    - configure
-
-- name: Set the listen v6 address to default address
-  set_fact:
-    - sshd_listen_address: "{{ sshd_listen_address }} + ['{{ ansible_default_ipv6.address }}']"
-  when: sshd_config.ListenAddress is defined and sshd_config.ListenAddress == ""
-  tags:
-    - configure
-
-- name: Set the listen address to Ansible default address
-  set_fact:
-    - sshd_listen_address:
-  tags:
-    - configure
+- name: Fail when we have no listen addresses given or detected addresses found
+  fail:
+    msg: "No ListenAddress given in sshd_config.ListenAddress or sshd_listen_addresses."
+  when: sshd_config.ListenAddress|length == 0 and sshd_listen_addresses|length == 0
 
 - name: Update sshd_config
   template:
