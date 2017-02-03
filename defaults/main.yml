@@ -14,6 +14,8 @@ sshd_packages:
 
 sshd_service: sshd
 
+ntp_no_firewalling: true
+
 sshd_listen_addresses: []
 sshd_listen_addresses_auto_detect: true
 sshd_listen_addresses_default_to_v4: true
@@ -26,6 +28,7 @@ sshd_use_default: true
 sshd_use_default_dist: true
 sshd_config_default_dist: {}
 sshd_config_default:
+  Port: 22
   ListenAddress: "{{ sshd_listen_addresses|default([], true) }}"
   Protocol: 2
   LogLevel: INFO

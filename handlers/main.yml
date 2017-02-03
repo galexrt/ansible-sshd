@@ -12,3 +12,6 @@
 
 - name: reload firewalld
   command: firewall-cmd --reload
+
+- name: Save iptables rules
+  command: service iptables save
