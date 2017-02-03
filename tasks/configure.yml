@@ -44,5 +44,3 @@
     - reload sshd
   tags:
     - configure
-
-- fail: msg="SWAG"
