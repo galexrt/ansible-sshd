@@ -5,7 +5,7 @@ sshd_packages:
   - openssh
   - openssh-server
 
-sshd_sftp_server: /usr/libexec/openssh/sftp-server
+sshd_subsystem_sftp: /usr/libexec/openssh/sftp-server
 
 sshd_config_default_dist:
   SyslogFacility: AUTHPRIV
@@ -13,4 +13,4 @@ sshd_config_default_dist:
   X11Forwarding: yes
   PrintLastLog: yes
   Subsystem:
-    - "sftp {{ sshd_sftp_server }}"
+    - "sftp {{ sshd_subsystem_sftp }}"

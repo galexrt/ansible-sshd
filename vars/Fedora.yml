@@ -1,5 +1,5 @@
 ---
-sshd_sftp_server: /usr/libexec/openssh/sftp-server
+sshd_subsystem_sftp: /usr/libexec/openssh/sftp-server
 
 sshd_config_default_dist:
   HostKey:
@@ -8,4 +8,4 @@ sshd_config_default_dist:
     - /etc/ssh/ssh_host_ed25519_key
   SyslogFacility: AUTHPRIV
   Subsystem:
-    - "sftp {{ sshd_sftp_server }}"
+    - "sftp {{ sshd_subsystem_sftp }}"

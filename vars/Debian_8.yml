@@ -23,4 +23,4 @@ sshd_config_default_dist:
   TCPKeepAlive: yes
   AcceptEnv: LANG LC_*
   Subsystem:
-    - "sftp {{ sshd_sftp_server }}"
+    - "sftp {{ sshd_subsystem_sftp }}"

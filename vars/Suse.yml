@@ -2,4 +2,4 @@
 sshd_packages:
   - openssh
 
-sshd_sftp_server: /usr/lib/ssh/sftp-server
+sshd_subsystem_sftp: /usr/lib/ssh/sftp-server

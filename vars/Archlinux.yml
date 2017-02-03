@@ -2,7 +2,7 @@
 sshd_packages:
   - openssh
 
-sshd_sftp_server: /usr/lib/ssh/sftp-server
+sshd_subsystem_sftp: /usr/lib/ssh/sftp-server
 
 sshd_config_default_dist:
   Port: 22
@@ -10,8 +10,8 @@ sshd_config_default_dist:
   AuthorizedKeysFile: .ssh/authorized_keys
   ChallengeResponseAuthentication: no
   PrintMotd: no
-  Subsystem: "sftp {{ sshd_sftp_server }}"
+  Subsystem: "sftp {{ sshd_subsystem_sftp }}"
   UsePAM: yes
   UsePrivilegeSeparation: sandbox
   Subsystem:
-    - "sftp {{ sshd_sftp_server }}"
+    - "sftp {{ sshd_subsystem_sftp }}"
