@@ -14,7 +14,7 @@ sshd_packages:
 
 sshd_service: sshd
 
-ntp_no_firewalling: true
+sshd_firewalling: true
 
 sshd_listen_addresses: []
 sshd_listen_addresses_auto_detect: true

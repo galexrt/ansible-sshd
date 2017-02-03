@@ -16,4 +16,4 @@
 - include: selinux.yml
 
 - include: firewall.yml
-  when: not sshd_no_firewalling
+  when: sshd_firewalling
