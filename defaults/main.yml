@@ -18,6 +18,7 @@ sshd_listen_addresses: []
 sshd_listen_addresses_auto_detect: true
 sshd_listen_addresses_default_to_v4: true
 sshd_listen_addresses_default_to_v6: true
+sshd_listen_addresses_empty_override: true
 
 sshd_subsystem_sftp: "/usr/lib/openssh/sftp-server"
 

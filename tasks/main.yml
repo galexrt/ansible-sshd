@@ -9,7 +9,7 @@
    - default.yml
 
 - include: install.yml
-  when: sshd_install
+  when: sshd_packages_install
 
 - include: configure.yml
 

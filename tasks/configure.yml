@@ -13,10 +13,14 @@
   tags:
     - configure
 
+- name: Set sshd listen addresses empty fact
+  set_fact:
+    sshd_listen_addresses_empty: "{{ sshd_config.ListenAddress|length == 0 and sshd_listen_addresses|length == 0 }}"
+
 - name: Set the listen v4 and v6 address from default detected addresses
   set_fact:
     sshd_listen_addresses: "{{ sshd_listen_addresses }} + ['{{ hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] }}']"
-  when: sshd_config.ListenAddress|length == 0 and sshd_listen_addresses|length == 0 and sshd_listen_addresses_auto_detect and hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] is defined
+  when: sshd_listen_addresses_empty and sshd_listen_addresses_auto_detect and hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] is defined
   with_items:
     - { value: "ipv4", when: sshd_listen_addresses_default_to_v4 }
     - { value: "ipv6", when: sshd_listen_addresses_default_to_v6 }
@@ -31,12 +35,16 @@
 - name: Update sshd_config
   template:
     src: "sshd_config.j2"
-    dest: "{{ sshd_config_file }}"
+    dest: /root/test
+#    dest: "{{ sshd_config_file }}"
     owner: "{{ sshd_config_owner }}"
     group: "{{ sshd_config_group }}"
     mode: "{{ sshd_config_mode }}"
-    validate: "/usr/sbin/sshd -T -f %s"
+#    validate: "/usr/sbin/sshd -T -f %s"
   notify:
     - reload sshd
   tags:
     - configure
+
+- fail:
+    msg: "SWAG"

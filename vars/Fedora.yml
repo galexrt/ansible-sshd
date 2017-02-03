@@ -3,9 +3,9 @@ sshd_sftp_server: /usr/libexec/openssh/sftp-server
 
 sshd_config_default_dist:
   HostKey:
-      - /etc/ssh/ssh_host_rsa_key
-      - /etc/ssh/ssh_host_ecdsa_key
-      - /etc/ssh/ssh_host_ed25519_key
-    SyslogFacility: AUTHPRIV
-    Subsystem:
-      - "sftp {{ sshd_sftp_server }}"
+    - /etc/ssh/ssh_host_rsa_key
+    - /etc/ssh/ssh_host_ecdsa_key
+    - /etc/ssh/ssh_host_ed25519_key
+  SyslogFacility: AUTHPRIV
+  Subsystem:
+    - "sftp {{ sshd_sftp_server }}"

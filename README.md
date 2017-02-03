@@ -86,7 +86,7 @@ An example playbook on how to use this role:
 ```
 - hosts: servers
   roles:
-    - { role: galexrt.sshd, sshd_install: true
+    - { role: galexrt.sshd, sshd_packages_install: true
      }
 ```
 

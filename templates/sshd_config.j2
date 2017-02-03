@@ -12,19 +12,24 @@
 {%     endfor %}
 {% endif %}
 {% endmacro %}
+{% if sshd_config.Match is defined %}
+{%     set match_value = value %}
+{% endif %}
+{% if (sshd_config.ListenAddress is not defined or (sshd_config.ListenAddress == "" or sshd_config.ListenAddress|length == 0)) and sshd_listen_addresses_empty_override %}
+{%     set sshd_config = sshd_config|combine({"ListenAddress": sshd_listen_addresses}) %}
+{% endif %}
 {{ ansible_managed | comment }}
 {% for key, value in sshd_config.iteritems() %}
-{% if key == "ListenAddress" and (value == "" or value|length == 0) %}
-{% set value = sshd_listen_addresses %}
-{% endif %}
-{%     if key == "Match" %}
-{%         for match in value %}
-{{-             renderValue("Match " + match['type'], match['name']) -}}
-{%             for optKey, optValue in match['options'].iteritems() %}
-{{-                 renderValue(optKey, optValue, true) -}}
-{%             endfor %}
-{%         endfor %}
-{%     else %}
-{{-         renderValue(key, value) -}}
+{%     if key != "Match" %}
+{{-        renderValue(key, value) -}}
 {%     endif %}
 {% endfor %}
+{% if match_value is defined and match_value|length > 0 %}
+
+{% for match in match_value %}
+{{-   renderValue("Match " + match['type'], match['name']) -}}
+{%    for optKey, optValue in match['options'].iteritems() %}
+{{-       renderValue(optKey, optValue, true) -}}
+{%    endfor %}
+{% endfor %}
+{% endif %}
