@@ -13,7 +13,7 @@
 {% endif %}
 {% endmacro %}
 {% if sshd_config.Match is defined %}
-{%     set match_value = value %}
+{%     set match_value = sshd_config.Match %}
 {% endif %}
 {% if (sshd_config.ListenAddress is not defined or (sshd_config.ListenAddress == "" or sshd_config.ListenAddress|length == 0)) and sshd_listen_addresses_empty_override %}
 {%     set sshd_config = sshd_config|combine({"ListenAddress": sshd_listen_addresses}) %}
