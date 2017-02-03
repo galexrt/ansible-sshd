@@ -35,7 +35,6 @@
 - name: Update sshd_config
   template:
     src: "sshd_config.j2"
-    dest: /root/test
     dest: "{{ sshd_config_file }}"
     owner: "{{ sshd_config_owner }}"
     group: "{{ sshd_config_group }}"
