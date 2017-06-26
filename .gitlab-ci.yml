@@ -1,5 +1,6 @@
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
+  GIT_SUBMODULE_STRATEGY: recursive
 
 cache:
   paths:
@@ -18,5 +19,5 @@ test:
   stage: test
   image: python:2.7
   script:
-    - git clone https://atrost@gitlab.zerbytes.net/ZerBytes/ansible/roles/common-facts.git tests/roles/zerbytes.common-facts/
+#    - git clone https://atrost@gitlab.zerbytes.net/ZerBytes/ansible/roles/common-facts.git tests/roles/zerbytes.common-facts/
     - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
