@@ -19,7 +19,7 @@
 {%     set sshd_config = sshd_config|combine({"ListenAddress": sshd_listen_addresses}) %}
 {% endif %}
 {{ ansible_managed | comment }}
-{% for key, value in sshd_config.iteritems() %}
+{% for key, value in sshd_config.items() %}
 {%     if key != "Match" %}
 {{-        renderValue(key, value) -}}
 {%     endif %}
@@ -28,7 +28,7 @@
 
 {% for match in match_value %}
 {{-   renderValue("Match " + match['type'], match['name']) -}}
-{%    for optKey, optValue in match['options'].iteritems() %}
+{%    for optKey, optValue in match['options'].items() %}
 {{-       renderValue(optKey, optValue, true) -}}
 {%    endfor %}
 {% endfor %}
