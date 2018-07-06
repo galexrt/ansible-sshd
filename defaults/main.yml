@@ -12,6 +12,8 @@ sshd_packages:
   - openssh
   - openssh-server
 
+sshd_port: 22
+
 sshd_service: sshd
 
 sshd_firewalling: true
