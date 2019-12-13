@@ -2,9 +2,8 @@
 - name: Install openssh-server package
   action: "{{ ansible_pkg_mgr }}"
   args:
-    name: "{{ item }}"
+    name: "{{ sshd_packages }}"
     state: latest
-  with_items: "{{ sshd_packages }}"
   notify:
     - enable sshd
   tags: install
