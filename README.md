@@ -51,9 +51,7 @@ sshd_config_default:
   PubkeyAuthentication: yes
   AuthorizedKeysFile: .ssh/authorized_keys
   PasswordAuthentication: no
-  RSAAuthentication: yes
   HostbasedAuthentication: no
-  RhostsRSAAuthentication: no
   ChallengeResponseAuthentication: no
   GSSAPIAuthentication: yes
   GSSAPICleanupCredentials: no
