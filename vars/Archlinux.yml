@@ -12,6 +12,5 @@ sshd_config_default_dist:
   PrintMotd: no
   Subsystem: "sftp {{ sshd_subsystem_sftp }}"
   UsePAM: yes
-  UsePrivilegeSeparation: sandbox
   Subsystem:
     - "sftp {{ sshd_subsystem_sftp }}"
