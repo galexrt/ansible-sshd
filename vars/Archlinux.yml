@@ -10,7 +10,6 @@ sshd_config_default_dist:
   AuthorizedKeysFile: .ssh/authorized_keys
   ChallengeResponseAuthentication: no
   PrintMotd: no
-  Subsystem: "sftp {{ sshd_subsystem_sftp }}"
   UsePAM: yes
   Subsystem:
     - "sftp {{ sshd_subsystem_sftp }}"

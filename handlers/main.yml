@@ -11,7 +11,7 @@
     state: restarted
 
 - name: reload firewalld
-  command: firewall-cmd --reload
+  ansible.builtin.command: firewall-cmd --reload
 
 - name: Save iptables rules
-  command: service iptables save
+  ansible.builtin.command: service iptables save
