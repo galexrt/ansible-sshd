@@ -8,7 +8,7 @@
 - name: Get iptables rules
   ansible.builtin.command: iptables -L --wait
   register: iptablesrules
-  check_mode
+  check_mode: false
   ignore_errors: true
   when: not has_firewalld and has_iptables
 
