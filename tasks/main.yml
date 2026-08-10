@@ -9,12 +9,16 @@
         - "{{ ansible_os_family }}.yml"
         - default.yml
 
-- include_tasks: install.yml
+- ansible.builtin.include_tasks:
+    file: install.yml
   when: sshd_packages_install
 
-- include_tasks: configure.yml
+- ansible.builtin.include_tasks:
+    file: configure.yml
 
-- include_tasks: selinux.yml
+- ansible.builtin.include_tasks:
+    file: selinux.yml
 
-- include_tasks: firewall.yml
+- ansible.builtin.include_tasks:
+    file: firewall.yml
   when: sshd_firewalling

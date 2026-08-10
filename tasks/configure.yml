@@ -1,24 +1,24 @@
 ---
 - name: Merge user config with default config
-  set_fact:
+  ansible.builtin.set_fact:
     sshd_config: "{{ sshd_config_default|combine(sshd_config, recursive=True) }}"
   when: sshd_use_default
   tags:
     - configure
 
 - name: Merge user config with os specific config
-  set_fact:
+  ansible.builtin.set_fact:
     sshd_config: "{{ sshd_config_default_dist|combine(sshd_config, recursive=True) }}"
   when: sshd_use_default_dist
   tags:
     - configure
 
 - name: Set sshd listen addresses empty fact
-  set_fact:
+  ansible.builtin.set_fact:
     sshd_listen_addresses_empty: "{{ sshd_config.ListenAddress|length == 0 and sshd_listen_addresses|length == 0 }}"
 
 - name: Set the listen v4 and v6 address from default detected addresses
-  set_fact:
+  ansible.builtin.set_fact:
     sshd_listen_addresses: "{{ sshd_listen_addresses }} + ['{{ hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] }}']"
   when: sshd_listen_addresses_empty and sshd_listen_addresses_auto_detect and hostvars[inventory_hostname]['ansible_default_' + item.value]['address'] is defined
   with_items:
@@ -28,7 +28,7 @@
     - configure
 
 - name: Fail when we have no listen addresses given or detected addresses found
-  fail:
+  ansible.builtin.fail:
     msg: "No ListenAddress given in sshd_config.ListenAddress or sshd_listen_addresses."
   when: sshd_config.ListenAddress|length == 0 and sshd_listen_addresses|length == 0
 

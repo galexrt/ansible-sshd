@@ -1,6 +1,6 @@
 ---
 - name: Install openssh-server package
-  package:
+  ansible.builtin.package:
     name: "{{ sshd_packages }}"
     state: latest
   notify:
